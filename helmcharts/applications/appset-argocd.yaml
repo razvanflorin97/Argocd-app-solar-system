@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  generators:
+  - git:
+      repoURL: https://github.com/razvanflorin97/Argocd-app-solar-system.git
+      revision: HEAD
+      directories:
+      - path: helmcharts/values/argocd
+  template:
+    metadata:
+      name: '{{.cluster}}-argocd'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/razvanflorin97/Argocd-app-solar-system.git
+        targetRevision: HEAD
+        path: helmcharts/helm/argocd
+        helm:
+          releaseName: "{{path[2]}}"
+          valueFiles:
+            - ../../{{path}}/values.yaml
+      destination:
+        server: in-cluster
+        namespace: argocd
