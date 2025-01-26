@@ -1,4 +1,3 @@
-argocd:
   configs:
     params:
       server.insecure: true
